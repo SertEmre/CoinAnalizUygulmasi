@@ -1,18 +1,17 @@
 import requests
 import time
+from datetime import datetime 
 
-def kullanici_para_birimi_sec():
+def kullanici_para_birimi_secimi():
 
     print("Coin verilerini hangi para biriminde görmek istersiniz?:'usd', 'try'")
     secim = input("Lütfen bir para birimi girin (usd / try): ").strip().lower()
 
     if secim not in ["usd", "try"]:
-        print("\nGeçersiz giriş yapıldı. Varsayılan olarak USD seçildi.\n")
+        print("\nGeçersiz para birimi. Varsayılan olarak USD seçildi.\n")
         secim = "usd"
     else:
-        print(f"\n{secim.upper()} seçildi. Veriler bu para birimiyle gösterilecek.\n")
-
-    return secim
+        return secim
 
 def coin_verilerini_getir(toplam_sayfa=3, doviz="usd"):
 
@@ -31,11 +30,10 @@ def coin_verilerini_getir(toplam_sayfa=3, doviz="usd"):
 
         try:
             cevap = requests.get(url, params=parametreler, timeout=10)
-            cevap.raise_for_status()
+            cevap.raise_for_status() # hatayı bir HTTPError olarak yakalayıp programı durdurur
             sayfa_verisi = cevap.json()
 
             if not sayfa_verisi:
-                print(f"Sayfa {sayfa_numarasi} boş geldi.")
                 break
 
             coin_listesi.extend(sayfa_verisi)
@@ -46,8 +44,7 @@ def coin_verilerini_getir(toplam_sayfa=3, doviz="usd"):
         except requests.exceptions.RequestException as hata:
             print(f"Sayfa {sayfa_numarasi} alınamadı: {hata}")
             break
-
-    print(f"\nToplam {len(coin_listesi)} coin yüklendi.\n")
+        
     return coin_listesi
 
 def coin_bilgisi_yazdir(coin, birim):
@@ -87,10 +84,12 @@ def coinleri_yazdir(coin_listesi, adet=10, doviz="usd"):
         coin_bilgisi_yazdir(coin, birim)
 
 def main():
+    su_an = datetime.now()
+    tarih_zamah = su_an.strftime("%d/%m/%Y %H:%M:%S")
 
     print("-"*20+"Coin Yükseliş & Düşüş Takip Aracı"+"-" * 20)
-    para_birimi = kullanici_para_birimi_sec()
+    para_birimi = kullanici_para_birimi_secimi()
     coin_verileri = coin_verilerini_getir(toplam_sayfa=3, doviz=para_birimi)
-    coinleri_yazdir(coin_verileri, adet=10, doviz=para_birimi)
+    coinleri_yazdir(coin_verileri, adet=3, doviz=para_birimi)
 
 main()
