@@ -3,15 +3,19 @@ import time
 from datetime import datetime 
 
 def kullanici_para_birimi_secimi():
+    desteklenen_birimler = ["usd", "try", "eur", "gbp", "jpy", "btc"]
+    print("Coin verilerini hangi para biriminde görmek istersiniz?")
+    print(f"Desteklenen birimler: {', '.join(desteklenen_birimler)}")
 
-    print("Coin verilerini hangi para biriminde görmek istersiniz?:'usd', 'try'")
-    secim = input("Lütfen bir para birimi girin (usd / try): ").strip().lower()
+    secim = input("Lütfen bir para birimi girin: ").strip().lower()
 
-    if secim not in ["usd", "try"]:
-        print("\nGeçersiz para birimi. Varsayılan olarak USD seçildi.\n")
+    if secim not in desteklenen_birimler:
+        print("\nDesteklenmeyen para birimi. Varsayılan olarak USD seçildi.\n")
         secim = "usd"
     else:
-        return secim
+        print(f"\n{secim.upper()} seçildi. Veriler bu para birimiyle gösterilecek.\n")
+
+    return secim
 
 def coin_verilerini_getir(toplam_sayfa=3, doviz="usd"):
 
@@ -44,7 +48,7 @@ def coin_verilerini_getir(toplam_sayfa=3, doviz="usd"):
         except requests.exceptions.RequestException as hata:
             print(f"Sayfa {sayfa_numarasi} alınamadı: {hata}")
             break
-        
+
     return coin_listesi
 
 def coin_bilgisi_yazdir(coin, birim):
@@ -54,7 +58,16 @@ def coin_bilgisi_yazdir(coin, birim):
     print("-" * 20)
 
 def coinleri_yazdir(coin_listesi, adet=10, doviz="usd"):
-    birim = "$" if doviz == "usd" else "₺"
+    semboller = {
+        "usd": "$",
+        "try": "₺",
+        "eur": "€",
+        "gbp": "£",
+        "jpy": "¥",
+        "btc": "₿"
+    }
+
+    birim = semboller.get(doviz, "")  # Bilinmeyen birim varsa boş bırakıyorum
 
     if not coin_listesi:
         print("Gösterilecek coin bulunamadı.")
