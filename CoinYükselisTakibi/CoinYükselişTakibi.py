@@ -84,12 +84,17 @@ def coinleri_yazdir(coin_listesi, adet=10, doviz="usd"):
         coin_bilgisi_yazdir(coin, birim)
 
 def main():
-    su_an = datetime.now()
-    tarih_zamah = su_an.strftime("%d/%m/%Y %H:%M:%S")
-
     print("-"*20+"Coin Yükseliş & Düşüş Takip Aracı"+"-" * 20)
     para_birimi = kullanici_para_birimi_secimi()
-    coin_verileri = coin_verilerini_getir(toplam_sayfa=3, doviz=para_birimi)
-    coinleri_yazdir(coin_verileri, adet=3, doviz=para_birimi)
+
+
+    while True:
+        su_an = datetime.now()
+        tarih_zamah = su_an.strftime("%d/%m/%Y %H:%M:%S")
+        coin_verileri = coin_verilerini_getir(toplam_sayfa=3, doviz=para_birimi)
+        coinleri_yazdir(coin_verileri, adet=3, doviz=para_birimi)
+
+        print("5 Dakika sonra veriler tekrardan güncellenecek")
+        time.sleep(300)
 
 main()
