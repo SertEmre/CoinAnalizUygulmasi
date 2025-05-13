@@ -107,7 +107,11 @@ def main():
         coin_verileri = coin_verilerini_getir(toplam_sayfa=3, doviz=para_birimi)
         coinleri_yazdir(coin_verileri, adet=3, doviz=para_birimi)
 
-        print("5 Dakika sonra veriler tekrardan güncellenecek")
-        time.sleep(300)
+        islem = input("Veri güncelemeye devam etmek için Enter'a, çıkmak için 'q' tuşuna basın: ").strip().lower()
+        if islem == 'q':
+            print("Program sonlandırıldı.")
+            break
 
+        print("5 Dakika sonra veriler tekrardan güncellenecek")
+        time.sleep(300)        
 main()
